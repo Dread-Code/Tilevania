@@ -6,20 +6,32 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] float runSpeed = 5f;
+    [SerializeField] float runSpeed = 10f;
+    [SerializeField] float jumSpeed = 5f;
 
     Vector2 moveInput;
     Rigidbody2D myRigidbody;
+    Animator myAnimator;
+    bool playerHasHorizontalSpeed;
 
     void Start()
     {
         myRigidbody = GetComponent<Rigidbody2D>();
+        myAnimator = GetComponent<Animator>();
     }
 
     void Update()
     {
+        getHorizontalSpeed();
         Run();
         FlipSprite();
+    }
+
+    private void getHorizontalSpeed()
+    {
+        // Epsilon is an special number used for floats that represents
+        // the minimun unity nearly to 0
+        playerHasHorizontalSpeed = Mathf.Abs(myRigidbody.velocity.x) > Mathf.Epsilon;
     }
 
     void OnMove(InputValue value)
@@ -27,18 +39,30 @@ public class PlayerMovement : MonoBehaviour
         moveInput = value.Get<Vector2>();
     }
 
+    void OnJump(InputValue value)
+    {
+        if (value.isPressed)
+        {
+            myRigidbody.velocity += new Vector2(0f, jumSpeed);
+        }
+    }
+
     void Run()
     {
         Vector2 playerVelocity = new Vector2(moveInput.x * runSpeed, myRigidbody.velocity.y);
         myRigidbody.velocity = playerVelocity;
+        if (playerHasHorizontalSpeed)
+        {
+            myAnimator.SetBool("isRunning", true);
+
+        } else
+        {
+            myAnimator.SetBool("isRunning", false);
+        }
     }
 
     private void FlipSprite()
     {
-        // Epsilon is an special number used for floats that represents
-        // the minimun unity nearly to 0
-        bool playerHasHorizontalSpeed = Mathf.Abs(myRigidbody.velocity.x) > Mathf.Epsilon;
-
         if (playerHasHorizontalSpeed)
         {
             // Mathf.sign return us 1 or -1 depending of the sign from the value passed
