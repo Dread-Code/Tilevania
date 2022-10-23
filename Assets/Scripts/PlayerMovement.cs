@@ -7,12 +7,13 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] float runSpeed = 10f;
-    [SerializeField] float jumSpeed = 5f;
+    [SerializeField] float jumpSpeed = 25f;
+    [SerializeField] float climbSpeed = 5f;
+
 
     Vector2 moveInput;
     Rigidbody2D myRigidbody;
     Animator myAnimator;
-    bool playerHasHorizontalSpeed;
     CapsuleCollider2D myCapsuleCollider;
 
     void Start()
@@ -24,16 +25,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        getHorizontalSpeed();
         Run();
         FlipSprite();
-    }
-
-    private void getHorizontalSpeed()
-    {
-        // Epsilon is an special number used for floats that represents
-        // the minimun unity nearly to 0
-        playerHasHorizontalSpeed = Mathf.Abs(myRigidbody.velocity.x) > Mathf.Epsilon;
+        ClimbLadder();
     }
 
     void OnMove(InputValue value)
@@ -47,7 +41,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (value.isPressed && isTouchingGround)
         {
-            myRigidbody.velocity += new Vector2(0f, jumSpeed);
+            myRigidbody.velocity += new Vector2(0f, jumpSpeed);
         }
     }
 
@@ -55,11 +49,14 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector2 playerVelocity = new Vector2(moveInput.x * runSpeed, myRigidbody.velocity.y);
         myRigidbody.velocity = playerVelocity;
+        bool playerHasHorizontalSpeed = Mathf.Abs(myRigidbody.velocity.x) > Mathf.Epsilon;
+
         if (playerHasHorizontalSpeed)
         {
             myAnimator.SetBool("isRunning", true);
 
-        } else
+        }
+        else
         {
             myAnimator.SetBool("isRunning", false);
         }
@@ -67,11 +64,25 @@ public class PlayerMovement : MonoBehaviour
 
     private void FlipSprite()
     {
+        // Epsilon is an special number used for floats that represents
+        // the minimun unity nearly to 0
+        bool playerHasHorizontalSpeed = Mathf.Abs(myRigidbody.velocity.x) > Mathf.Epsilon;
+
         if (playerHasHorizontalSpeed)
         {
             // Mathf.sign return us 1 or -1 depending of the sign from the value passed
             transform.localScale = new Vector2(Mathf.Sign(myRigidbody.velocity.x), 1f);
         }
 
+    }
+    void ClimbLadder()
+    {
+        bool isTouchingLadder = myCapsuleCollider.IsTouchingLayers(LayerMask.GetMask("Climbing"));
+
+        if (isTouchingLadder)
+        {
+            Vector2 climbVelocity = new Vector2(myRigidbody.velocity.x, moveInput.y * climbSpeed);
+            myRigidbody.velocity = climbVelocity;
+        }
     }
 }
