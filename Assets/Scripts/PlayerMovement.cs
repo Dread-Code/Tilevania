@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float runSpeed = 10f;
     [SerializeField] float jumpSpeed = 25f;
     [SerializeField] float climbSpeed = 5f;
-    [SerializeField] Vector2 deathKick = new Vector2(20f, 20f);
+    [SerializeField] Vector2 deathKick = new Vector2(0f, 20f);
 
 
     Vector2 moveInput;
@@ -42,15 +42,17 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void OnMove(InputValue value)
-    {
-        moveInput = value.Get<Vector2>();
+    {   if (isAlive)
+        {
+            moveInput = value.Get<Vector2>();
+        }
     }
 
     void OnJump(InputValue value)
     {
         bool isTouchingGround = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
 
-        if (value.isPressed && isTouchingGround)
+        if (value.isPressed && isTouchingGround && isAlive)
         {
             myRigidbody.velocity += new Vector2(0f, jumpSpeed);
         }
@@ -98,7 +100,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Die()
     {
-        if (myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemies")))
+        if (myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemies", "Hazards")))
         {
             isAlive = false;
             myAnimator.SetTrigger("Dying");
