@@ -21564,5 +21564,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ginger (Player)
       objectReference: {fileID: 0}
+    - target: {fileID: 6359650567514591373, guid: e156e3767bfdc459fa137ac45a7944c8, type: 3}
+      propertyPath: deathKick.x
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6359650567514591373, guid: e156e3767bfdc459fa137ac45a7944c8, type: 3}
+      propertyPath: deathKick.y
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e156e3767bfdc459fa137ac45a7944c8, type: 3}
