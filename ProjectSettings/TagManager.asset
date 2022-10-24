@@ -53,6 +53,9 @@ TagManager:
   - name: Climbing
     uniqueID: 3470597517
     locked: 0
+  - name: Bouncing
+    uniqueID: 1078065703
+    locked: 0
   - name: Player
     uniqueID: 1602396561
     locked: 0
