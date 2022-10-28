@@ -35,9 +35,9 @@ public class GameSession : MonoBehaviour
         }
     }
 
-    public void AddToScore()
+    public void AddToScore(int pointsForCoinPickUp)
     {
-        score = score + 100;
+        score = score + pointsForCoinPickUp;
         scoreText.text = score.ToString();
     }
 
