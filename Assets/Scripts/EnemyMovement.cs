@@ -22,8 +22,11 @@ public class EnemyMovement : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D collision)
     {
-        moveSpeed = -moveSpeed;
-        FlipEnemyFacing();
+        if (collision.tag == "Platforms")
+        {
+            moveSpeed = -moveSpeed;
+            FlipEnemyFacing();
+        }
     }
 
     void FlipEnemyFacing()
